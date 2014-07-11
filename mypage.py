@@ -6,7 +6,7 @@ import jinja2
 
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
-jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir), autoescape=True)
 
 
 class Handler(webapp2.RequestHandler):
@@ -20,8 +20,21 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kwargs):
         self.write(self.render_str(template, **kwargs))
 
+
 class MainPage(Handler):
     def get(self):
-        self.render('shoping_list.html')
+        items = self.request.get_all('food')
+        self.render('shoping_list.html', items=items)
 
-application = webapp2.WSGIApplication([('/', MainPage),], debug=True)
+
+class FizzBuzz(Handler):
+    def get(self):
+        n = self.request.get("n")
+        if n:
+            n = int(n)
+        else:
+            n = 0
+        self.render('fizzbuzz.html', n=n)
+
+
+application = webapp2.WSGIApplication([('/', MainPage), ('/fizzbuzz', FizzBuzz)], debug=True)
