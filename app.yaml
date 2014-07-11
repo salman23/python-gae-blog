@@ -8,3 +8,7 @@ threadsafe: true
 handlers:
 - url: /.*
   script: mypage.application
+
+libraries:
+- name: jinja2
+  version: latest
